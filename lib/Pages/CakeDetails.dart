@@ -68,6 +68,7 @@ class _CakeDetailsState extends State<CakeDetails>
       print('no quantity');
     } else {
       _cakeOrderNotifier.add(CakeOrderModel(
+        imageUrl: cakeModel.imageUrl,
         cakeId: cakeModel.cakeId,
         flavor: _flavor!,
         name: cakeModel.name,
@@ -99,8 +100,10 @@ class _CakeDetailsState extends State<CakeDetails>
                 color: Colors.black87,
               ),
               onPressed: () {
-                setState(() {
-                  _ordering = true;
+                Future.delayed(Duration(milliseconds: 200), () {
+                  setState(() {
+                    _ordering = true;
+                  });
                 });
               },
             ),
@@ -161,8 +164,11 @@ class _CakeDetailsState extends State<CakeDetails>
                   duration: Duration(milliseconds: 350),
                   curve: Curves.easeInOutExpo,
                   height: _ordering ? 200.h : 250.h,
-                  child: Image.network(
-                    widget.cakeModel.imageUrl,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Image.network(
+                      widget.cakeModel.imageUrl,
+                    ),
                   ),
                 ),
               ),

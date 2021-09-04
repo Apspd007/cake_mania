@@ -1,10 +1,10 @@
 import 'package:cake_mania/Materials.dart';
-import 'package:cake_mania/Pages/Favorites.dart';
+import 'package:cake_mania/Models/UserDataModel.dart';
+import 'package:cake_mania/Pages/TrackingOrders.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:cake_mania/services/user_preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class FancyDrawer extends StatefulWidget {
@@ -17,7 +17,6 @@ class _FancyDrawerState extends State<FancyDrawer>
   late AnimationController _controller;
   late Animation<double> _falling;
   late Animation<double> _changeInHeight;
-  // late Animation<double> _changeInWidth;
 
   @override
   void initState() {
@@ -48,11 +47,11 @@ class _FancyDrawerState extends State<FancyDrawer>
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthBase>(context);
-    final user = Provider.of<LocalUser>(context);
+    final userData = Provider.of<UserData>(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),
-      color: MyColorScheme.mauvelous,
+      color: MyColorScheme.brinkPink,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,6 +62,16 @@ class _FancyDrawerState extends State<FancyDrawer>
           //       Get.to(() => FavoritePage(user: user));
           //     }),
           // SizedBox(height: 20),
+          _animation(
+              title: 'Orders',
+              onTab: () {
+                Navigator.of(context).pop();
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (_) => TrackingOrders(
+                          userData: userData,
+                        )));
+              }),
+          SizedBox(height: 20),
           _animation(
               title: 'Sign Out',
               onTab: () {

@@ -1,6 +1,7 @@
 class CakeOrderModel {
   final int cakeId;
   final String name;
+  final String imageUrl;
   final double price;
   String flavor;
   int quantity;
@@ -9,21 +10,24 @@ class CakeOrderModel {
   CakeOrderModel({
     required this.cakeId,
     required this.name,
+    required this.imageUrl,
     required this.price,
     required this.flavor,
     required this.quantity,
     this.addOns,
   });
-  Map<String, dynamic> toJson() => {
-        "cakeId": cakeId,
-        "name": name,
-        "price": price,
-        "flavor": flavor,
-        "quantity": quantity,
-        "addOns": addOns
+  Map<String, dynamic> toJson(CakeOrderModel cakeOrderModel) => {
+        "cakeId": cakeOrderModel.cakeId,
+        "name": cakeOrderModel.name,
+        "imageUrl": cakeOrderModel.imageUrl,
+        "price": cakeOrderModel.price,
+        "flavor": cakeOrderModel.flavor,
+        "quantity": cakeOrderModel.quantity,
+        "addOns": cakeOrderModel.addOns
       };
 
   factory CakeOrderModel.fromJson(dynamic json) => CakeOrderModel(
+        imageUrl: json["imageUrl"],
         cakeId: json["cakeId"],
         name: json["name"],
         price: json["price"],
@@ -36,7 +40,7 @@ class CakeOrderModel {
   static Map<String, dynamic> orderListToJson(
           List<CakeOrderModel> cakeOrderModel, String key) =>
       {
-        key: List<dynamic>.from(cakeOrderModel.map((e) => e.toJson())),
+        key: List<dynamic>.from(cakeOrderModel.map((e) => e.toJson(e))),
       };
 
 // convert json file to list of orders

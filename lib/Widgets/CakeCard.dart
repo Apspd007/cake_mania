@@ -242,9 +242,12 @@ class CakeCard extends StatelessWidget {
                       sigma: 4,
                       child: Center(
                         child: ClipRect(
-                          child: Image.network(
-                            cakeModel.imageUrl,
-                            height: 150.h,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 10),
+                            child: Image.network(
+                              cakeModel.imageUrl,
+                              height: 150.h,
+                            ),
                           ),
                         ),
                       ),

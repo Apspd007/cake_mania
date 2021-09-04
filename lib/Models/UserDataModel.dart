@@ -1,15 +1,16 @@
 import 'dart:convert';
 
 import 'package:cake_mania/Models/CakeModel.dart';
+import 'package:cake_mania/Models/OrderBillModel.dart';
 
 class UserData {
   final List<int> favourites;
   final List<CakeModel> previousOrderss;
-  final List<CakeModel> currentOrders;
+  final List<OrderBillModel> confirmOrders;
   UserData({
     required this.favourites,
     required this.previousOrderss,
-    required this.currentOrders,
+    required this.confirmOrders,
   });
 
   static Map<String, dynamic> toJson(UserData userData) => {
@@ -34,6 +35,7 @@ class UserData {
   factory UserData.from(Map<String, dynamic> json) => UserData(
         favourites: _jsonToList(json["UserData"]["favourites"]),
         previousOrderss: [],
-        currentOrders: [],
+        confirmOrders: OrderBillModel.jsonToOrderBillList(
+            json["UserData"]["confirmOrders"]),
       );
 }

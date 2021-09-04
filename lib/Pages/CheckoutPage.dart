@@ -104,7 +104,6 @@ class _CheckoutPageState extends State<CheckoutPage> {
                   totalPrice: totalPrice,
                   orderId: DateTime.now().toIso8601String(),
                   cakeOrderModel: cakeOrderNotifier.cakeOrderModel,
-                  user: widget.user,
                 ));
                 _dataBase.confirmOrder(widget.user, json);
                 cakeOrderNotifier.deleteAllOrders();

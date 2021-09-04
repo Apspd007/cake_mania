@@ -4,13 +4,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 ThemeData themeData() {
   return ThemeData(
-      backgroundColor: Color(0xFFEB96A7),
-      primaryColor: Color(0xFFEB96A7),
+      backgroundColor: Color(0xFFFB5B7B),
+      primaryColor: Color(0xFFFB5B7B),
       appBarTheme: AppBarTheme(
-        color: Color(0xFFEB96A7),
+        color: Color(0xFFFB5B7B),
       ),
       cardColor: Color(0xFFF9ED4E),
-      scaffoldBackgroundColor: Color(0xFFEB96A7),
+      scaffoldBackgroundColor: Color(0xFFFB5B7B),
       accentColor: Color(0xFF73F8FC),
       canvasColor: Color(0xFFE8715F));
 }
@@ -38,7 +38,9 @@ TextStyle textStyle({
 
 class MyColorScheme {
   static Color englishVermillion = Color(0xFFC83F49);
+  static Color brinkPink = Color(0xFFFB5B7B);
   static Color corn = Color(0xFFF9ED4E);
+  static Color aqua = Color(0xFF3BF4FB);
   static Color terraCotta = Color(0xFFE8715E);
   static Color mauvelous = Color(0xFFEC98A8);
 }

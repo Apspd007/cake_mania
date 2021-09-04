@@ -17,37 +17,41 @@ class MyApp extends StatelessWidget {
       builder: () => GetMaterialApp(
         title: 'Bakery',
         theme: themeData(),
-        home: Scaffold(
-          body: SafeArea(
-            child: StreamBuilder<LocalUser?>(
-                stream: _auth.authStateChange(),
-                builder:
-                    (BuildContext context, AsyncSnapshot<LocalUser?> snapshot) {
-                  if (snapshot.hasData) {
-                    final _user = snapshot.data!;
-                    if (snapshot.connectionState == ConnectionState.active) {
-                      return Provider(
-                          create: (_) => LocalUser(
-                                uid: _user.uid,
-                                email: _user.email,
-                                displayName: _user.displayName,
-                                displayImage: _user.displayImage,
-                                emailVerified: _user.emailVerified,
-                              ),
-                          child: InitPage());
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  } else if (snapshot.hasError) {
-                    print(snapshot.error);
-                    return Text(snapshot.error.toString());
-                  } else {
-                    return Loginpage();
-                  }
-                }),
-          ),
-        ),
+        home: _child(_auth),
       ),
     );
+  }
+
+  Scaffold _child(AuthBase _auth) {
+    return Scaffold(
+        body: SafeArea(
+          child: StreamBuilder<LocalUser?>(
+              stream: _auth.authStateChange(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<LocalUser?> snapshot) {
+                if (snapshot.hasData) {
+                  final _user = snapshot.data!;
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    return Provider(
+                        create: (_) => LocalUser(
+                              uid: _user.uid,
+                              email: _user.email,
+                              displayName: _user.displayName,
+                              displayImage: _user.displayImage,
+                              emailVerified: _user.emailVerified,
+                            ),
+                        child: InitPage());
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                } else if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return Text(snapshot.error.toString());
+                } else {
+                  return Loginpage();
+                }
+              }),
+        ),
+      );
   }
 }

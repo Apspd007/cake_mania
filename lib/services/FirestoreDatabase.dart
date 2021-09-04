@@ -1,4 +1,5 @@
 import 'package:cake_mania/Models/SectionModel.dart';
+import 'package:cake_mania/Notifiers/OrderBillNotifier.dart';
 import 'package:cake_mania/Notifiers/SectionNotifier.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,10 +45,6 @@ class MyFirestoreDatabse implements Database {
     final _doc = _userReference.doc(userId).get();
     return _doc;
   }
-  // Future<DocumentSnapshot<Object?>> getCakeIdAsFuture(String cakeId) {
-  //   final _doc = _userReference.doc(cakeId).get();
-  //   return _doc;
-  // }
 
   Future<DocumentSnapshot<Object?>> getAllCakes() async {
     final _doc = _cakeColReference.doc("cakeList").get();
@@ -81,6 +78,7 @@ class MyFirestoreDatabse implements Database {
         _section.addSectionNames(x.id);
       });
     });
+
     print(_section.sectionNames);
   }
 
@@ -89,8 +87,9 @@ class MyFirestoreDatabse implements Database {
         .doc("cakeOrders")
         .collection("users")
         .doc(user.displayName)
-        .set({
-          'confirmOrders': [json]
+        .update({
+          'confirmOrders': FieldValue.arrayUnion([json]),
+          "user": LocalUser.toJson(user),
         })
         .then((json) => print("Order Confirmed from Admin"))
         .catchError(

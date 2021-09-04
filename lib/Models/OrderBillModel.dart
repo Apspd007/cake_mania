@@ -5,7 +5,6 @@ import 'package:cake_mania/services/AuthenticationService.dart';
 
 class OrderBillModel {
   final List<CakeOrderModel> cakeOrderModel;
-  final LocalUser user;
   final OrderStatus orderStatus;
   final PaymentStatus paymentStatus;
   final double totalPrice;
@@ -13,16 +12,20 @@ class OrderBillModel {
 
   OrderBillModel({
     required this.cakeOrderModel,
-    required this.user,
     required this.totalPrice,
     required this.orderId,
     this.orderStatus = OrderStatus.pending,
     this.paymentStatus = PaymentStatus.unpaid,
   });
 
+  static List<OrderBillModel> jsonToOrderBillList( json) {
+    final list =
+        List<OrderBillModel>.from(json.map((x) => OrderBillModel.fromJson(x)));
+    return list;
+  }
+
   factory OrderBillModel.fromJson(json) => OrderBillModel(
         cakeOrderModel: CakeOrderModel.jsonToOrderList(json, "cakeOrderModel"),
-        user: LocalUser.fromJson(json["user"]),
         totalPrice: json["totalPrice"],
         orderId: json["orderId"],
         orderStatus: OrderStatusConvertor.fromJson(json["orderStatus"]),
@@ -31,7 +34,6 @@ class OrderBillModel {
         // static  => {
         "cakeOrderModel": CakeOrderModel.orderListToJson(
             orderBillModel.cakeOrderModel, "cakeOrderModel")["cakeOrderModel"],
-        "user": LocalUser.toJson(orderBillModel.user),
         "orderId": orderBillModel.orderId,
         "totalPrice": orderBillModel.totalPrice,
         "orderStatus": OrderStatusConvertor.toJson(orderBillModel.orderStatus),
