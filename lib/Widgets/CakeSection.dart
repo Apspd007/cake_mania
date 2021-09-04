@@ -1,5 +1,6 @@
 import 'package:cake_mania/Materials.dart';
-import 'package:cake_mania/Models/CakeCardModel.dart';
+import 'package:cake_mania/Models/CakeCardColor.dart';
+import 'package:cake_mania/Models/CakeModel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -16,8 +17,7 @@ class CakeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cards =
-        CakeModel.cakeCardsFromCakeModelList(cardModels, sectionCardColors);
+    final cards = CakeModel.cakeModelListToCakeCardList(cardModels,sectionCardColors);
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Column(

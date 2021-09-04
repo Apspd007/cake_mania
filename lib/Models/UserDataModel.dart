@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:cake_mania/Models/CakeCardModel.dart';
+import 'package:cake_mania/Models/CakeModel.dart';
 
 class UserData {
   final List<int> favourites;

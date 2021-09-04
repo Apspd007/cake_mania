@@ -1,5 +1,6 @@
 import 'package:cake_mania/Materials.dart';
-import 'package:cake_mania/Models/CakeCardModel.dart';
+import 'package:cake_mania/Models/CakeCardColor.dart';
+import 'package:cake_mania/Models/CakeModel.dart';
 import 'package:cake_mania/Pages/CakeDetails.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
@@ -10,11 +11,11 @@ import 'package:simple_shadow/simple_shadow.dart';
 
 class CakeCard extends StatelessWidget {
   final CakeModel cakeModel;
-  final CakeCardColor cardColor;
+  final CakeCardColor? cardColor;
 
   CakeCard({
     required this.cakeModel,
-    required this.cardColor,
+    this.cardColor,
   });
 
   @override
@@ -27,7 +28,7 @@ class CakeCard extends StatelessWidget {
           Get.to(() => CakeDetails(
                 cakeModel: cakeModel,
                 user: user,
-                cardColor: cardColor,
+                cardColor: cardColor ?? CakeCardColor.corn,
               ));
         },
         child: DecoratedBox(

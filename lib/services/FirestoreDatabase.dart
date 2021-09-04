@@ -1,7 +1,12 @@
+import 'package:cake_mania/Models/SectionModel.dart';
+import 'package:cake_mania/Notifiers/SectionNotifier.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 abstract class Database {
+  void initData(BuildContext context);
   Stream<DocumentSnapshot<Object?>> getUserDataAsStream(String userId);
   Future<DocumentSnapshot<Object?>> getUserDataAsFuture(String userId);
   // Future<DocumentSnapshot<Object?>> getCakeIdAsFuture(String cakeId);
@@ -11,7 +16,9 @@ abstract class Database {
   Future<void> addToFavourite(String userId, int value);
   Future<void> removeFromFavourite(String userId, int value);
   Future<void> confirmOrder(LocalUser user, Map<String, dynamic> value);
-  Future<DocumentSnapshot<Object?>> allCakes();
+  Future<DocumentSnapshot<Object?>> getAllCakes();
+  Future<DocumentSnapshot<Object?>> getSectionData(String sectionName);
+  // Future<SectionModel?> getSection(String sectionName);
 }
 
 class MyFirestoreDatabse implements Database {
@@ -21,6 +28,8 @@ class MyFirestoreDatabse implements Database {
       FirebaseFirestore.instance.collection('users');
   CollectionReference _cakeColReference =
       FirebaseFirestore.instance.collection('cakes');
+  CollectionReference _sectionReference =
+      FirebaseFirestore.instance.collection('cakeSections');
   // CollectionReference _cakeIdReference =
   //     FirebaseFirestore.instance.collection('cakeId');
 
@@ -40,9 +49,39 @@ class MyFirestoreDatabse implements Database {
   //   return _doc;
   // }
 
-  Future<DocumentSnapshot<Object?>> allCakes() async {
+  Future<DocumentSnapshot<Object?>> getAllCakes() async {
     final _doc = _cakeColReference.doc("cakeList").get();
     return _doc;
+  }
+
+  Future<DocumentSnapshot<Object?>> getSectionData(String sectionName) async {
+    final _result = _sectionReference.doc(sectionName).get();
+    return _result;
+  }
+
+  // Future<SectionModel?> getSection(String sectionName) {
+  //   SectionModel? sectionModel;
+  //   final _result = _sectionReference.doc(sectionName).get().asStream();
+  //   final v = _result.forEach((element) {
+  //     final json = element.data() as Map<String, dynamic>;
+  //     // print(SectionModel.fromJson(json));
+  //     sectionModel = SectionModel.fromJson(json);
+  //     // print(sectionModel);
+  //   }).then((value) => sectionModel);
+  //   print(v);
+  //   return v;
+  // }
+
+  void initData(BuildContext context) async {
+    final _section = context.read<SectionNameNotifier>();
+    final _doc = _sectionReference.get();
+    final _ = _doc.asStream();
+    _.forEach((element) {
+      element.docs.forEach((x) {
+        _section.addSectionNames(x.id);
+      });
+    });
+    print(_section.sectionNames);
   }
 
   Future<void> confirmOrder(LocalUser user, Map<String, dynamic> json) async {

@@ -1,5 +1,6 @@
 import 'package:cake_mania/MyApp.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
+import 'package:cake_mania/Notifiers/SectionNotifier.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:cake_mania/services/FirestoreDatabase.dart';
 import 'package:cake_mania/services/user_preferences.dart';
@@ -20,10 +21,8 @@ class RootApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-          create: (_) => CakeOrderNotifier(),
-          lazy: false,
-        ),
+        ChangeNotifierProvider(create: (_) => CakeOrderNotifier(), lazy: false),
+        ChangeNotifierProvider(create: (_) => SectionNameNotifier()),
         Provider<AuthBase>(create: (context) => Auth()),
         Provider<Database>(create: (context) => MyFirestoreDatabse()),
       ],

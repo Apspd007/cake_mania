@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:cake_mania/Materials.dart';
-import 'package:cake_mania/Models/CakeCardModel.dart';
+import 'package:cake_mania/Models/CakeCardColor.dart';
+import 'package:cake_mania/Models/CakeModel.dart';
 import 'package:cake_mania/Models/CakeOrderModel.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
 import 'package:cake_mania/Pages/CheckoutPage.dart';
@@ -484,9 +485,7 @@ class _CakeDetailsState extends State<CakeDetails>
         SizedBox(height: 20.h),
         Text('Details', style: textStyle(color: Colors.black87)),
         SizedBox(height: 20.h),
-        Text(
-            '''Lorem ipsum dolor sit amet, consectetur adipiscing elit. Tortor vestibulum cursus nisi consequat integer cum in malesuada. At ligula integer amet at convallis mi, neque rutrum.''',
-            style: textStyle(color: Colors.black87)),
+        Text(widget.cakeModel.details, style: textStyle(color: Colors.black87)),
       ],
     );
   }

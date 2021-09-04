@@ -1,7 +1,10 @@
 import 'package:badges/badges.dart';
 import 'package:cake_mania/Materials.dart';
-import 'package:cake_mania/Models/CakeCardModel.dart';
+import 'package:cake_mania/Models/CakeCardColor.dart';
+import 'package:cake_mania/Models/CakeModel.dart';
+import 'package:cake_mania/Models/SectionModel.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
+import 'package:cake_mania/Notifiers/SectionNotifier.dart';
 import 'package:cake_mania/Other/ConfirmExitDialog.dart';
 import 'package:cake_mania/Pages/CheckoutPage.dart';
 import 'package:cake_mania/Widgets/CakeSection.dart';
@@ -15,12 +18,21 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<Database>(context);
-
     final _totalOrders = context.select<CakeOrderNotifier, int>(
         (cakeOrderNotifier) => cakeOrderNotifier.totalOrders);
     return WillPopScope(
@@ -29,50 +41,60 @@ class HomePage extends StatelessWidget {
         key: _scaffoldKey,
         drawer: FancyDrawer(),
         drawerEnableOpenDragGesture: true,
-        body: FutureBuilder<DocumentSnapshot<Object?>>(
-            future: _auth.allCakes(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                final json = snapshot.data!.data();
-                final data = CakeModel.cakeModelListFromDB(json);
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return _mainBody(context, _totalOrders, data);
-                } else {
-                  return Center();
-                }
-              } else if (snapshot.hasError) {
-                return Center();
-              } else {
-                return Center();
-              }
-            }),
+        body: _mainBody(context, _totalOrders),
       ),
     );
   }
 
-  CustomScrollView _mainBody(
-      BuildContext context, int _totalOrders, List<CakeModel> data) {
+  List<Widget> _sections(BuildContext context) {
+    final _auth = Provider.of<Database>(context);
+    final _section = context.watch<SectionNameNotifier>();
+    final List<Widget> children = [];
+    Widget? widget;
+    _section.sectionNames.forEach((element) {
+      widget = _futureBuilder(_auth, element);
+      children.add(widget!);
+    });
+    return children;
+  }
+
+  Widget _futureBuilder(Database _auth, String sectionName) {
+    return FutureBuilder<DocumentSnapshot<Object?>>(
+        future: _auth.getSectionData(sectionName),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              final json = snapshot.data!.data() as Map<String, dynamic>;
+              final sectionModel = SectionModel.fromJson(json);
+              return CakeSection(
+                title: sectionModel.title,
+                sectionCardColors: sectionModel.cardColor,
+                cardModels: sectionModel.cakeModels,
+              );
+            } else {
+              return Center();
+            }
+          } else if (snapshot.hasError) {
+            return Center();
+          } else {
+            return Center();
+          }
+        });
+  }
+
+  CustomScrollView _mainBody(BuildContext context, int _totalOrders) {
     return CustomScrollView(
       slivers: [
         _appBar(context, _totalOrders),
+        SliverToBoxAdapter(
+          child: _profile(context),
+        ),
         SliverToBoxAdapter(
           child: Padding(
             padding: EdgeInsets.only(left: 30.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _profile(context),
-                CakeSection(
-                  title: 'Popular',
-                  sectionCardColors: CakeCardColor.corn,
-                  cardModels: data,
-                ),
-                CakeSection(
-                  title: 'New',
-                  sectionCardColors: CakeCardColor.englishVermillion,
-                  cardModels: data,
-                )
-              ],
+              children: _sections(context),
             ),
           ),
         ),
