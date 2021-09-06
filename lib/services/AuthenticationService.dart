@@ -54,13 +54,13 @@ class Auth implements AuthBase {
 
   LocalUser? _userFromFirebase(User? _user) {
     if (_user != null) {
-    return LocalUser(
-      uid: _user.uid,
-      displayImage: _user.photoURL!,
-      displayName: _user.displayName!,
-      email: _user.email!,
-      emailVerified: _user.emailVerified,
-    );
+      return LocalUser(
+        uid: _user.uid,
+        displayImage: _user.photoURL!,
+        displayName: _user.displayName!,
+        email: _user.email!,
+        emailVerified: _user.emailVerified,
+      );
     } else
       return null;
   }
@@ -90,7 +90,7 @@ class Auth implements AuthBase {
         ),
       );
       if (authResult.additionalUserInfo!.isNewUser) {
-        _database.addUser(authResult.user!.uid, jsonData());
+        _database.createUser(_userFromFirebase(authResult.user)!, jsonData());
       }
       return _userFromFirebase(authResult.user);
     } else {

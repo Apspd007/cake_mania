@@ -52,14 +52,28 @@ class OrderBillCard extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  element.name,
-                  style: textStyle(
-                    enableShadow: false,
-                    fontSize: 24,
-                    color: Colors.black87,
-                  ),
-                ),
+                RichText(
+                  overflow: TextOverflow.fade,
+                    text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "${element.name}",
+                      style: textStyle(
+                        enableShadow: false,
+                        fontSize: 24,
+                        color: Colors.black87,
+                      ),
+                    ),
+                    // TextSpan(
+                    //   text: "(${element.flavor})",
+                    //   style: textStyle(
+                    //     enableShadow: false,
+                    //     fontSize: 19,
+                    //     color: Colors.black87,
+                    //   ),
+                    // ),
+                  ],
+                )),
                 Row(
                   children: [
                     Text(

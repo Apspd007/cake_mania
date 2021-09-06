@@ -26,32 +26,33 @@ class _InitPageState extends State<InitPage> {
 
   @override
   Widget build(BuildContext context) {
-    final _auth = Provider.of<Database>(context);
-    final uid = Provider.of<LocalUser>(context).uid;
-    return FutureBuilder<DocumentSnapshot<Object?>>(
-        future: _auth.getUserDataAsFuture(uid),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              final userData =
-                  UserData.from(snapshot.data!.data() as Map<String, dynamic>);
-              return Provider<UserData>(
-                  create: (_) => UserData(
-                        confirmOrders: userData.confirmOrders,
-                        favourites: userData.favourites,
-                        previousOrderss: userData.previousOrderss,
-                      ),
-                  child: HomePage());
-            } else {
-              return Center();
-            }
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          } else {
-            return Center();
-          }
-        });
+    return HomePage();
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   final _auth = Provider.of<Database>(context);
+  //   final uid = Provider.of<LocalUser>(context).uid;
+  //   return FutureBuilder<DocumentSnapshot<Object?>>(
+  //       future: _auth.getUserDataAsFuture(uid),
+  //       builder: (context, snapshot) {
+  //         if (snapshot.hasData) {
+  //           if (snapshot.connectionState == ConnectionState.done) {
+  //             final userData =
+  //                 UserData.from(snapshot.data!.data() as Map<String, dynamic>);
+  //             return Provider<UserData>(
+  //                 create: (_) => UserData(), child: HomePage());
+  //           } else {
+  //             return Center();
+  //           }
+  //         } else if (snapshot.hasError) {
+  //           return Center(
+  //             child: Text(snapshot.error.toString()),
+  //           );
+  //         } else {
+  //           return Center();
+  //         }
+  //       });
+  // }
+
 }

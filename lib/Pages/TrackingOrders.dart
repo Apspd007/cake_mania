@@ -1,14 +1,16 @@
 import 'package:cake_mania/Materials.dart';
 import 'package:cake_mania/Models/OrderBillModel.dart';
-import 'package:cake_mania/Models/UserDataModel.dart';
 import 'package:cake_mania/Widgets/OrderBillCard.dart';
+import 'package:cake_mania/services/FirestoreDatabase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
+import 'package:provider/provider.dart';
 
 class TrackingOrders extends StatefulWidget {
-  final UserData userData;
-  TrackingOrders({required this.userData});
+  final String uid;
+  TrackingOrders({required this.uid});
   @override
   _TrackingOrdersState createState() => _TrackingOrdersState();
 }
@@ -18,7 +20,7 @@ class _TrackingOrdersState extends State<TrackingOrders> {
 
   @override
   Widget build(BuildContext context) {
-    final _userData = widget.userData;
+    final db = Provider.of<Database>(context);
     return Scaffold(
       appBar: _appBar(),
       body: Padding(
@@ -27,24 +29,40 @@ class _TrackingOrdersState extends State<TrackingOrders> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _switchTab(),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  // children: _confirmOrderList(_userData.confirmOrders),
-                  children:
-                      _tabIndex == 0 ? _children(_userData.confirmOrders) : [],
-                ),
-              ),
-            ),
+            StreamBuilder<DocumentSnapshot<Object?>>(
+                stream: db.getMyConfirmedOrders(widget.uid),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
+                  if (snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.active) {
+                      final json =
+                          snapshot.data!.data() as Map<String, dynamic>;
+                      final orders = OrderBillModel.jsonToOrderBillList(json);
+                      return Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: _tabIndex == 0 ? _children(orders) : [],
+                          ),
+                        ),
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text(snapshot.error.toString()));
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
           ],
         ),
       ),
     );
   }
 
-  List<Widget> _children(List<OrderBillModel> confirmOrders) {
+  List<Widget> _children(List<OrderBillModel> orders) {
     final List<Widget> list = [];
-    confirmOrders.forEach((element) {
+    orders.forEach((element) {
       list.add(OrderBillCard(orderBillCard: element));
     });
     return list;

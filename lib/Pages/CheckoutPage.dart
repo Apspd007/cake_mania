@@ -9,6 +9,7 @@ import 'package:cake_mania/services/user_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:random_string/random_string.dart';
 
 class CheckoutPage extends StatefulWidget {
   final LocalUser user;
@@ -63,6 +64,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
 
   List<Widget> _children(
       CakeOrderNotifier cakeOrderNotifier, BuildContext context) {
+    final String orderId = randomString(12);
     final _dataBase = Provider.of<Database>(context);
     List<Widget> children = [];
     children.add(
@@ -102,10 +104,10 @@ class _CheckoutPageState extends State<CheckoutPage> {
               onTap: () {
                 final json = OrderBillModel.toJson(OrderBillModel(
                   totalPrice: totalPrice,
-                  orderId: DateTime.now().toIso8601String(),
+                  orderId: orderId,
                   cakeOrderModel: cakeOrderNotifier.cakeOrderModel,
                 ));
-                _dataBase.confirmOrder(widget.user, json);
+                _dataBase.confirmOrder(widget.user, json, orderId);
                 cakeOrderNotifier.deleteAllOrders();
                 UserPreference.clearData();
                 setState(() {});

@@ -9,9 +9,9 @@ class OrderStatusConvertor {
   static OrderStatus fromJson(json) {
     if (json == "pending") {
       return OrderStatus.pending;
-    } else if (json['orderStatus'] == "accepted") {
+    } else if (json == "accepted") {
       return OrderStatus.accepted;
-    } else if (json['orderStatus'] == "rejected") {
+    } else if (json == "rejected") {
       return OrderStatus.rejected;
     } else {
       return OrderStatus.onHold;

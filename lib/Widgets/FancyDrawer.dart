@@ -47,7 +47,7 @@ class _FancyDrawerState extends State<FancyDrawer>
   @override
   Widget build(BuildContext context) {
     final _auth = Provider.of<AuthBase>(context);
-    final userData = Provider.of<UserData>(context);
+    final user = Provider.of<LocalUser>(context);
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20),
@@ -67,9 +67,7 @@ class _FancyDrawerState extends State<FancyDrawer>
               onTab: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => TrackingOrders(
-                          userData: userData,
-                        )));
+                    builder: (_) => TrackingOrders(uid: user.uid)));
               }),
           SizedBox(height: 20),
           _animation(

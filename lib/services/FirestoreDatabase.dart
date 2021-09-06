@@ -11,14 +11,17 @@ abstract class Database {
   Stream<DocumentSnapshot<Object?>> getUserDataAsStream(String userId);
   Future<DocumentSnapshot<Object?>> getUserDataAsFuture(String userId);
   // Future<DocumentSnapshot<Object?>> getCakeIdAsFuture(String cakeId);
-  Future<void> addUser(String userId, Map<String, dynamic> data);
+  Future<void> createUser(LocalUser user, Map<String, dynamic> data);
   Future<void> updateUser(String userId, String key, dynamic value);
   Future<void> deleteUser(String userId);
   Future<void> addToFavourite(String userId, int value);
   Future<void> removeFromFavourite(String userId, int value);
-  Future<void> confirmOrder(LocalUser user, Map<String, dynamic> value);
+  Future<void> confirmOrder(
+      LocalUser user, Map<String, dynamic> value, String orderId);
+  Stream<DocumentSnapshot<Object?>> getMyConfirmedOrders(String uid);
   Future<DocumentSnapshot<Object?>> getAllCakes();
   Future<DocumentSnapshot<Object?>> getSectionData(String sectionName);
+
   // Future<SectionModel?> getSection(String sectionName);
 }
 
@@ -78,28 +81,44 @@ class MyFirestoreDatabse implements Database {
         _section.addSectionNames(x.id);
       });
     });
-
-    print(_section.sectionNames);
   }
 
-  Future<void> confirmOrder(LocalUser user, Map<String, dynamic> json) async {
+  Stream<DocumentSnapshot<Object?>> getMyConfirmedOrders(String uid) {
+    final _doc = _userReference
+        .doc(uid)
+        .collection("confirmOrders")
+        .doc("orders")
+        .snapshots();
+    return _doc;
+  }
+
+  Future<void> confirmOrder(
+      LocalUser user, Map<String, dynamic> json, String orderId) async {
+    _adminReference.doc("cakeOrders").update(
+      {
+        "OrdersBy": FieldValue.arrayUnion([LocalUser.toJson(user)]),
+      },
+    );
     _adminReference
         .doc("cakeOrders")
         .collection("users")
-        .doc(user.displayName)
-        .update({
-          'confirmOrders': FieldValue.arrayUnion([json]),
-          "user": LocalUser.toJson(user),
-        })
-        .then((json) => print("Order Confirmed from Admin"))
+        .doc(user.uid)
+        .set(
+          {orderId: json},
+          SetOptions(merge: true),
+        )
+        .then((json) => print("Order Confirmed for Admin"))
         .catchError(
             (error) => print("Failed to Confirm Order from Admin: $error"));
     _userReference
         .doc(user.uid)
-        .update({
-          'UserData.confirmOrders': FieldValue.arrayUnion([json])
-        })
-        .then((json) => print("Order Confirmed from User"))
+        .collection("confirmOrders")
+        .doc("orders")
+        .set(
+          {orderId: json},
+          SetOptions(merge: true),
+        )
+        .then((json) => print("Order Confirmed for User"))
         .catchError(
             (error) => print("Failed to Confirm Order from User: $error"));
   }
@@ -126,18 +145,20 @@ class MyFirestoreDatabse implements Database {
             (error) => print("Failed to update favourite list: $error"));
   }
 
-  Future<void> addUser(String userId, Map<String, dynamic> data) async {
+  Future<void> createUser(LocalUser user, Map<String, dynamic> data) async {
+    _userReference
+        .doc(user.uid)
+        .set(data)
+        .then((value) => print("User\'s Account Created"))
+        .catchError((error) => print("Failed to add user: $error"));
     _adminReference
         .doc("cakeOrders")
         .collection("users")
-        .doc(userId)
-        .set({"confirmOrders": []})
-        .then((value) => print("User added"))
-        .catchError((error) => print("Failed to add user: $error"));
-    _userReference
-        .doc(userId)
-        .set(data)
-        .then((value) => print("User added"))
+        .doc(user.uid)
+        .set({
+          "confirmOrders": [],
+        })
+        .then((value) => print("User added to Admin Database"))
         .catchError((error) => print("Failed to add user: $error"));
   }
 

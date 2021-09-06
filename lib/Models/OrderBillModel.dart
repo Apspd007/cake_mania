@@ -18,9 +18,11 @@ class OrderBillModel {
     this.paymentStatus = PaymentStatus.unpaid,
   });
 
-  static List<OrderBillModel> jsonToOrderBillList( json) {
-    final list =
-        List<OrderBillModel>.from(json.map((x) => OrderBillModel.fromJson(x)));
+  static List<OrderBillModel> jsonToOrderBillList(Map<String, dynamic> json) {
+    List<OrderBillModel> list = [];
+    json.forEach((key, value) {
+      list.add(OrderBillModel.fromJson(value));
+    });
     return list;
   }
 
