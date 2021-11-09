@@ -3,6 +3,10 @@ enum OrderStatus {
   accepted,
   rejected,
   onHold,
+  preparing,
+  prepared,
+  delivery,
+  delivered,
 }
 
 class OrderStatusConvertor {
@@ -13,6 +17,14 @@ class OrderStatusConvertor {
       return OrderStatus.accepted;
     } else if (json == "rejected") {
       return OrderStatus.rejected;
+    } else if (json == "preparing") {
+      return OrderStatus.preparing;
+    } else if (json == "prepared") {
+      return OrderStatus.prepared;
+    } else if (json == "delivery") {
+      return OrderStatus.delivery;
+    } else if (json == "delivered") {
+      return OrderStatus.delivered;
     } else {
       return OrderStatus.onHold;
     }
@@ -25,6 +37,14 @@ class OrderStatusConvertor {
       return 'accepted';
     } else if (OrderStatus.rejected == orderStatus) {
       return 'rejected';
+    } else if (OrderStatus.preparing == orderStatus) {
+      return 'preparing';
+    } else if (OrderStatus.prepared == orderStatus) {
+      return 'prepared';
+    } else if (OrderStatus.delivery == orderStatus) {
+      return 'delivery';
+    } else if (OrderStatus.delivered == orderStatus) {
+      return 'delivered';
     } else {
       return 'onHold';
     }

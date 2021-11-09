@@ -5,7 +5,6 @@ import 'package:cake_mania/Pages/CakeDetails.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 
@@ -22,40 +21,29 @@ class CakeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<LocalUser>(context);
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+      padding: EdgeInsets.only(right: 30.w),
       child: GestureDetector(
         onTap: () {
-          Get.to(() => CakeDetails(
-                cakeModel: cakeModel,
-                user: user,
-                cardColor: cardColor ?? CakeCardColor.corn,
-              ));
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (_) => CakeDetails(
+                    cakeModel: cakeModel,
+                    user: user,
+                    cardColor: cardColor ?? CakeCardColor.corn,
+                  )));
         },
         child: DecoratedBox(
           decoration: BoxDecoration(
             color: Colors.white,
-            // gradient: _gradient(),
-            boxShadow: [
-              BoxShadow(
-                  offset: Offset(0, 0),
-                  color: Colors.black38,
-                  blurRadius: 15,
-                  spreadRadius: 0.5),
-            ],
+            border: Border.all(
+              color: Colors.black26,
+              width: .5,
+            ),
             borderRadius: BorderRadius.circular(20.r),
           ),
           child: Padding(
-            padding: EdgeInsets.fromLTRB(10, 10, 10, 20),
+            padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
             child: SizedBox(
-              height: 270.h,
-              width: 200.w,
-              child: Stack(
-                children: [
-                  _cakeWithDetails(context),
-                  // _addToFav(context),
-                  _addToBag(context)
-                ],
-              ),
+              child: _cakeWithDetails(context),
             ),
           ),
         ),
@@ -67,8 +55,8 @@ class CakeCard extends StatelessWidget {
     switch (cardColor) {
       case CakeCardColor.corn:
         return MyColorScheme.corn;
-      case CakeCardColor.englishVermillion:
-        return MyColorScheme.englishVermillion;
+      case CakeCardColor.brinkPink:
+        return MyColorScheme.brinkPink;
       case CakeCardColor.terraCotta:
         return MyColorScheme.terraCotta;
       default:
@@ -76,92 +64,35 @@ class CakeCard extends StatelessWidget {
     }
   }
 
-  // LinearGradient _gradient() {
-  //   switch (cardColor) {
-  //     case CakeCardColor.corn:
-  //       return LinearGradient(
-  //           begin: Alignment.topCenter,
-  //           end: Alignment.bottomCenter,
-  //           stops: [
-  //             0.2,
-  //             0.6,
-  //             1.0
-  //           ],
-  //           colors: [
-  //             MyColorScheme.corn.withOpacity(3),
-  //             MyColorScheme.corn,
-  //             MyColorScheme.corn.withOpacity(7),
-  //           ]);
-  //     case CakeCardColor.englishVermillion:
-  //       return LinearGradient(
-  //           begin: Alignment.topCenter,
-  //           end: Alignment.bottomCenter,
-  //           stops: [
-  //             0.1,
-  //             0.6,
-  //             1.0
-  //           ],
-  //           colors: [
-  //             MyColorScheme.englishVermillion.withOpacity(3),
-  //             MyColorScheme.englishVermillion,
-  //             MyColorScheme.englishVermillion.withOpacity(7),
-  //           ]);
-  //     default:
-  //       return LinearGradient(
-  //           begin: Alignment.topCenter,
-  //           end: Alignment.bottomCenter,
-  //           stops: [
-  //             0.2,
-  //             0.6,
-  //             1.0
-  //           ],
-  //           colors: [
-  //             MyColorScheme.corn.withOpacity(3),
-  //             MyColorScheme.corn,
-  //             MyColorScheme.corn.withOpacity(7),
-  //           ]);
-  //   }
+  // Widget _addToBag(BuildContext context) {
+  //   // final _cakeOrderNotifier = Provider.of<CakeOrderNotifier>(context);
+  //   return GestureDetector(
+  //     onTap: () {
+  //       // _cakeOrderNotifier.add(CakeOrderModel(
+  //       //   imageUrl: cakeModel.imageUrl,
+  //       //   cakeId: cakeModel.cakeId,
+  //       //   flavor: 'Mango',
+  //       //   name: cakeModel.name,
+  //       //   price: cakeModel.price,
+  //       //   quantity: 1,
+  //       // ));
+  //       // Fluttertoast.showToast(
+  //       //   msg: 'Added to the Cart',
+  //       //   backgroundColor: MyColorScheme.brinkPink,
+  //       //   gravity: ToastGravity.CENTER,
+  //       // );
+  //       // UserPreference.saveOrderDetails(context);
+  //     },
+  //     child: Align(
+  //       alignment: Alignment.bottomRight,
+  //       child: Icon(
+  //         Icons.add_circle_rounded,
+  //         size: 53.r,
+  //         color: MyColorScheme.englishVermillion,
+  //       ),
+  //     ),
+  //   );
   // }
-
-  // Color _textColor(BuildContext context) {
-  //   switch (cardColor) {
-  //     case CakeCardColor.corn:
-  //       return MyColorScheme.terraCotta;
-  //     case CakeCardColor.englishVermillion:
-  //       return Colors.white;
-  //     case CakeCardColor.terraCotta:
-  //       return Colors.white;
-  //     default:
-  //       return MyColorScheme.terraCotta;
-  //   }
-  // }
-
-  // Color _iconColor(BuildContext context) {
-  //   switch (cardColor) {
-  //     case CakeCardColor.corn:
-  //       return Theme.of(context).canvasColor;
-  //     case CakeCardColor.englishVermillion:
-  //       return Colors.white;
-  //     case CakeCardColor.terraCotta:
-  //       return Colors.white;
-  //     default:
-  //       return Theme.of(context).canvasColor;
-  //   }
-  // }
-
-  Widget _addToBag(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
-      child: Align(
-        alignment: Alignment.bottomRight,
-        child: Icon(
-          Icons.add_circle_rounded,
-          size: 53.r,
-          color: MyColorScheme.englishVermillion,
-        ),
-      ),
-    );
-  }
 
   // Widget _addToFav(BuildContext context) {
   //   final _user = Provider.of<LocalUser>(context);
@@ -217,37 +148,33 @@ class CakeCard extends StatelessWidget {
 
   Align _cakeWithDetails(BuildContext context) {
     return Align(
-      alignment: Alignment.center,
-      child: OverflowBox(
-        maxHeight: 260.h,
-        minHeight: 200.h,
-        maxWidth: 180.w,
-        minWidth: 150.w,
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(10.w, 20.h, 10.w, 0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
+            Align(
+              alignment: Alignment.topCenter,
               child: SizedBox(
-                height: double.infinity,
-                width: double.infinity,
-                child: Center(
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                        color: _cardColor(context),
-                        borderRadius: BorderRadius.all(Radius.circular(20))),
-                    child: SimpleShadow(
-                      color: Colors.black87,
-                      offset: Offset(7, 8),
-                      sigma: 4,
-                      child: Center(
-                        child: ClipRect(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            child: Image.network(
-                              cakeModel.imageUrl,
-                              height: 150.h,
-                            ),
+                height: 180.h,
+                width: 180.w,
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                      color: _cardColor(context),
+                      borderRadius: BorderRadius.all(Radius.circular(10.r))),
+                  child: SimpleShadow(
+                    color: Colors.black87,
+                    offset: Offset(4, 5),
+                    sigma: 2.5,
+                    child: Center(
+                      child: ClipRect(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.w),
+                          child: Image.network(
+                            cakeModel.imageUrl,
+                            height: 150.h,
                           ),
                         ),
                       ),
@@ -261,22 +188,25 @@ class CakeCard extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 cakeModel.name,
-                style: textStyle(
-                    color: MyColorScheme.englishVermillion,
-                    fontWeight: FontWeight.w500,
-                    enableShadow: false),
+                style: lobster2TextStyle(
+                  color: MyColorScheme.englishVermillion,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 25,
+                ),
               ),
             ),
+            SizedBox(height: 10.h),
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                '\u{20B9}${cakeModel.price.round().toString()}',
-                style: textStyle(
-                    color: MyColorScheme.englishVermillion,
-                    fontWeight: FontWeight.w500,
-                    enableShadow: false),
+                '\u{20B9}${cakeModel.price.toString()}',
+                style: lobster2TextStyle(
+                  color: MyColorScheme.englishVermillion,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
+            SizedBox(height: 10.h),
           ],
         ),
       ),

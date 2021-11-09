@@ -1,8 +1,11 @@
 import 'dart:ui';
+import 'package:cake_mania/Designs/DrippingCreamPainter.dart';
 import 'package:cake_mania/Materials.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:proste_shadow_clip/proste_shadow_clip.dart';
 import 'package:provider/provider.dart';
 import 'package:cake_mania/Designs/painter.dart';
 import 'package:cake_mania/Widgets/UIButton.dart';
@@ -14,17 +17,35 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class Loginpage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    SystemUiOverlayStyle(
+      statusBarColor:  Color(0xffFF8696)
+    );
     AuthBase _authBase = Provider.of<AuthBase>(context);
     final padding = MediaQuery.of(context).viewPadding.top;
     return Scaffold(
-      // backgroundColor: DarkUIColors.loginpageBackgroundColor,
+      backgroundColor: Colors.white,
       body: Container(
         padding: EdgeInsets.only(bottom: padding),
-        // padding: EdgeInsets.symmetric(),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage(
+              'assets/wafer.png',
+            ),
+            fit: BoxFit.cover,
+          ),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            wavesContainer(),
+            // wavesContainer(),
+            // drippingCream(),
+            SizedBox(
+              height: 250.h,
+              child: Image.asset(
+                'assets/dripping_cream.png',
+                fit: BoxFit.cover,
+              ),
+            ),
             centerText(context),
             loginButton(context, _authBase),
           ],
@@ -45,33 +66,59 @@ class Loginpage extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: RichText(
-              text: TextSpan(
-                  text: 'CAKE\n',
-                  style: GoogleFonts.varelaRound(
-                    // color: Colors.white,
-                    color: MyColorScheme.englishVermillion,
-                    fontSize: 80.sp,
-                    shadows: [
-                      Shadow(
-                          offset: Offset(0, 5),
-                          blurRadius: 6,
-                          color: Colors.black38),
-                    ],
-                  ),
-                  children: [
-                    TextSpan(
-                        text: 'MANIA',
-                        style: GoogleFonts.varelaRound(
-                          color: Colors.white,
-                          fontSize: 80.sp,
-                          shadows: [
-                            Shadow(
-                                offset: Offset(0, 5),
-                                blurRadius: 6,
-                                color: Colors.black38),
-                          ],
-                        ))
-                  ]),
+              text: TextSpan(children: [
+                TextSpan(
+                  text: 'Cake',
+                  style: GoogleFonts.pacifico(
+                      height: 1,
+                      // color: Colors.white,
+                      color: MyColorScheme.brinkPink,
+                      fontSize: 80.sp,
+                      shadows: [
+                        Shadow(
+                            // bottomLeft
+                            offset: Offset(-1.5, -1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // bottomRight
+                            offset: Offset(1.5, -1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // topRight
+                            offset: Offset(1.5, 1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // topLeft
+                            offset: Offset(-1.5, 1.5),
+                            color: Colors.white),
+                      ]),
+                ),
+                TextSpan(
+                    text: '\n   Mania',
+                    style: GoogleFonts.pacifico(
+                      height: 1,
+                      color: MyColorScheme.terraCotta,
+                      fontSize: 80.sp,
+                      shadows: [
+                        Shadow(
+                            // bottomLeft
+                            offset: Offset(-1.5, -1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // bottomRight
+                            offset: Offset(1.5, -1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // topRight
+                            offset: Offset(1.5, 1.5),
+                            color: Colors.white),
+                        Shadow(
+                            // topLeft
+                            offset: Offset(-1.5, 1.5),
+                            color: Colors.white),
+                      ],
+                    ))
+              ]),
             ),
           ),
         ],
@@ -88,15 +135,15 @@ class Loginpage extends StatelessWidget {
         child: UILoginButton(
           googleImage: Image.asset(
             'assets/google_logo.png',
-            width: 22.r,
-            height: 22.r,
+            width: 30.r,
+            height: 30.r,
           ),
           text: 'Continue',
-          textSize: 22.sp,
+          textSize: 30.sp,
           height: 80.h,
           width: 200.w,
+          // backgroundColor: Color(0xFFFF7285),
           borderRadius: 60,
-          elevation: 5,
           onPressed: () async {
             var connectivityResult = await (Connectivity().checkConnectivity());
             if (connectivityResult == ConnectivityResult.wifi ||
@@ -126,6 +173,27 @@ class Loginpage extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+
+  Widget drippingCream() {
+    return Stack(
+      children: [
+        ProsteShadowClip(
+          clipper: DrippingCreamClipper(),
+          shadow: [
+            Shadow(
+              color: Colors.black26,
+              offset: Offset(0, 4),
+              blurRadius: 5,
+            ),
+          ],
+          child: Container(
+            color: Color(0xffFF8696),
+            height: 250.h,
+          ),
+        ),
+      ],
     );
   }
 

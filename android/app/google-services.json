@@ -1,0 +1,85 @@
+{
+  "project_info": {
+    "project_number": "752840950064",
+    "firebase_url": "https://cake-mania-aa560-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "cake-mania-aa560",
+    "storage_bucket": "cake-mania-aa560.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752840950064:android:45c5b124d461877ffb88f5",
+        "android_client_info": {
+          "package_name": "com.smartapps.cakemania"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752840950064-vojcgccgtn5oj6bv9plbuhvp0i60vr80.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartapps.cakemania",
+            "certificate_hash": "cddf93754c1d33473b74b14c77c873ae6a1add84"
+          }
+        },
+        {
+          "client_id": "752840950064-hb29hk9hcnsedf7mejaqo8nuvb5k4od5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZiXTNstaWU8eK3rnImHwgs_qN0v3hDD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752840950064-hb29hk9hcnsedf7mejaqo8nuvb5k4od5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:752840950064:android:ac567bae0a5ec0c2fb88f5",
+        "android_client_info": {
+          "package_name": "com.smartapps.cakemaniaadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "752840950064-m33sqk94ksplmkit0lprpskc2hniarvh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.smartapps.cakemaniaadmin",
+            "certificate_hash": "cddf93754c1d33473b74b14c77c873ae6a1add84"
+          }
+        },
+        {
+          "client_id": "752840950064-hb29hk9hcnsedf7mejaqo8nuvb5k4od5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZiXTNstaWU8eK3rnImHwgs_qN0v3hDD4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "752840950064-hb29hk9hcnsedf7mejaqo8nuvb5k4od5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

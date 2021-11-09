@@ -14,17 +14,17 @@ class OrderBillCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.white,
+          color: Colors.yellow.shade200,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
               offset: Offset.zero,
-              blurRadius: 10,
+              blurRadius: 2.0,
               color: Colors.black45,
             ),
           ]),
       padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 15.h),
-      margin: EdgeInsets.only(top: 20.h),
+      margin: EdgeInsets.symmetric(vertical: 10.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -37,6 +37,9 @@ class OrderBillCard extends StatelessWidget {
   }
 
   List<Widget> _children(OrderBillModel orderBillCard) {
+    final orderStatus = orderBillCard.orderStatus.toString().split(".")[1];
+    final paymentStatus =
+        orderBillCard.paymentStatus.toString().split('.')[1].toUpperCase();
     List<Widget> list = [];
     orderBillCard.cakeOrderModel.forEach((element) {
       list.add(Padding(
@@ -53,32 +56,32 @@ class OrderBillCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 RichText(
-                  overflow: TextOverflow.fade,
+                    overflow: TextOverflow.fade,
                     text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "${element.name}",
-                      style: textStyle(
-                        enableShadow: false,
-                        fontSize: 24,
-                        color: Colors.black87,
-                      ),
-                    ),
-                    // TextSpan(
-                    //   text: "(${element.flavor})",
-                    //   style: textStyle(
-                    //     enableShadow: false,
-                    //     fontSize: 19,
-                    //     color: Colors.black87,
-                    //   ),
-                    // ),
-                  ],
-                )),
+                      children: [
+                        TextSpan(
+                          text: "${element.name}",
+                          style: lobster2TextStyle(
+                            enableShadow: false,
+                            fontSize: 24,
+                            color: Colors.black87,
+                          ),
+                        ),
+                        // TextSpan(
+                        //   text: "(${element.flavor})",
+                        //   style: textStyle(
+                        //     enableShadow: false,
+                        //     fontSize: 19,
+                        //     color: Colors.black87,
+                        //   ),
+                        // ),
+                      ],
+                    )),
                 Row(
                   children: [
                     Text(
-                      "${element.price} x ${element.quantity}",
-                      style: textStyle(
+                      "${element.price} x ${element.weight}",
+                      style: lobster2TextStyle(
                         enableShadow: false,
                         fontSize: 18,
                         color: Colors.black87,
@@ -86,8 +89,8 @@ class OrderBillCard extends StatelessWidget {
                     ),
                     SizedBox(width: 20.w),
                     Text(
-                      "Total :  ${element.price * element.quantity}",
-                      style: textStyle(
+                      "Total :  ${element.price}",
+                      style: lobster2TextStyle(
                         enableShadow: false,
                         fontSize: 18,
                         color: Colors.black87,
@@ -111,23 +114,85 @@ class OrderBillCard extends StatelessWidget {
     list.add(
       Padding(
         padding: EdgeInsets.fromLTRB(25, 10, 25, 0),
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Grand Total :  ${orderBillCard.totalPrice}",
-              style: textStyle(
-                  enableShadow: false, fontSize: 18, color: Colors.black87),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Grand Total: ",
+                  style: poppinsTextStyle(fontSize: 21),
+                ),
+                Text(
+                  '\u{20B9}${orderBillCard.totalPrice}',
+                  style: poppinsTextStyle(fontSize: 21),
+                ),
+              ],
             ),
-            Text(
-              "${orderBillCard.orderStatus.toString().split(".")[1]}",
-              style: textStyle(
-                  enableShadow: false, fontSize: 18, color: Colors.black87),
+            SizedBox(height: 10.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Payment: ',
+                  style: poppinsTextStyle(fontSize: 20, color: Colors.black87),
+                ),
+                Text(
+                  paymentStatus,
+                  style: poppinsTextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: _paymentColor(paymentStatus)),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Order: ',
+                  style: poppinsTextStyle(fontSize: 20, color: Colors.black87),
+                ),
+                SizedBox(height: 10.h),
+                Text(
+                  orderStatus,
+                  style: poppinsTextStyle(
+                      fontSize: 20, color: _orderColor(orderStatus)),
+                ),
+              ],
             ),
           ],
         ),
       ),
     );
     return list;
+  }
+
+  Color? _orderColor(orderStatus) {
+    switch (orderStatus) {
+      case 'rejected':
+        return Colors.red.shade800;
+      case 'accepted':
+        return Colors.green.shade800;
+      case 'onHold':
+        return Colors.orange.shade800;
+      default:
+        return Colors.black87;
+    }
+  }
+
+  Color? _paymentColor(String paymentStatus) {
+    switch (paymentStatus) {
+      case 'UNPAID':
+        return Colors.red.shade900;
+
+      case 'PAID':
+        return Colors.green.shade900;
+      default:
+        return Colors.amber.shade900;
+    }
   }
 }

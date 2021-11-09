@@ -1,7 +1,5 @@
 import 'package:badges/badges.dart';
 import 'package:cake_mania/Materials.dart';
-import 'package:cake_mania/Models/CakeCardColor.dart';
-import 'package:cake_mania/Models/CakeModel.dart';
 import 'package:cake_mania/Models/SectionModel.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
 import 'package:cake_mania/Notifiers/SectionNotifier.dart';
@@ -11,11 +9,13 @@ import 'package:cake_mania/Widgets/CakeSection.dart';
 import 'package:cake_mania/Widgets/FancyDrawer.dart';
 import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:cake_mania/services/FirestoreDatabase.dart';
+import 'package:cake_mania/services/user_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:material_dialogs/material_dialogs.dart';
+import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -24,24 +24,39 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  void initState() {
+    super.initState();
+    // final userSettings = UserPreference.getUserSettings();
+  }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    
   }
 
   @override
   Widget build(BuildContext context) {
     final _totalOrders = context.select<CakeOrderNotifier, int>(
         (cakeOrderNotifier) => cakeOrderNotifier.totalOrders);
-    return WillPopScope(
-      onWillPop: () => ConfirmExit.showComfirmExitDialog(context, _scaffoldKey),
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: FancyDrawer(),
-        drawerEnableOpenDragGesture: true,
-        body: _mainBody(context, _totalOrders),
+    return SafeArea(
+      child: WillPopScope(
+        onWillPop: () => ConfirmExit.showComfirmExitDialog(context),
+        child: Scaffold(
+          appBar: _appBar(context, _totalOrders),
+          drawerEnableOpenDragGesture: true,
+          body: Stack(
+            children: [
+              Image.asset(
+                'assets/Background.png',
+                fit: BoxFit.cover,
+                width: 500.w,
+                height: 800.h,
+              ),
+              _mainBody(context, _totalOrders),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -66,55 +81,87 @@ class _HomePageState extends State<HomePage> {
             if (snapshot.connectionState == ConnectionState.done) {
               final json = snapshot.data!.data() as Map<String, dynamic>;
               final sectionModel = SectionModel.fromJson(json);
-              return CakeSection(
-                title: sectionModel.title,
-                sectionCardColors: sectionModel.cardColor,
-                cardModels: sectionModel.cakeModels,
-              );
+              if (sectionModel.cakeModels.length == 0) {
+                return SizedBox.shrink();
+              } else {
+                return CakeSection(
+                  title: sectionModel.title,
+                  sectionCardColors: sectionModel.cardColor,
+                  cardModels: sectionModel.cakeModels,
+                );
+              }
             } else {
-              return Center();
+              return SizedBox.shrink();
             }
           } else if (snapshot.hasError) {
-            return Center();
+            return SizedBox.shrink();
           } else {
-            return Center();
+            return SizedBox.shrink();
           }
         });
   }
 
-  CustomScrollView _mainBody(BuildContext context, int _totalOrders) {
-    return CustomScrollView(
-      slivers: [
-        _appBar(context, _totalOrders),
-        SliverToBoxAdapter(
-          child: _profile(context),
-        ),
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: EdgeInsets.only(left: 30.w),
-            child: Column(
+  Widget _mainBody(BuildContext context, int _totalOrders) {
+    return SingleChildScrollView(
+      physics: BouncingScrollPhysics(),
+      child: Padding(
+        padding: EdgeInsets.only(left: 30.w, bottom: 20.h),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(height: 20.h),
+            _Profile(),
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: _sections(context),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
-  SliverAppBar _appBar(BuildContext context, int totalOrders) {
+  AppBar _appBar(BuildContext context, int totalOrders) {
     final user = Provider.of<LocalUser>(context);
-    return SliverAppBar(
+    final auth = Provider.of<AuthBase>(context);
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 2,
+      shadowColor: Colors.black54,
       leading: IconButton(
-        icon: Image.asset('assets/Menu.png'),
+        // icon: Image.asset('assets/Menu.png'),
+        icon: SvgPicture.asset(
+          'assets/Menu.svg',
+          color: MyColorScheme.englishVermillion,
+          height: 45.h,
+        ),
         onPressed: () {
-          _scaffoldKey.currentState!.openDrawer();
+          Navigator.of(context).push(
+            PageRouteBuilder(
+                pageBuilder: (context, animtaion, secondaryAnimation) {
+                  return FancyDrawer(auth: auth, user: user);
+                },
+                transitionDuration: Duration(milliseconds: 500),
+                transitionsBuilder:
+                    (context, animtaion, secondaryAnimation, child) {
+                  return SlideTransition(
+                    position: animtaion.drive(
+                      Tween(
+                        begin: Offset(-1, 0),
+                        end: Offset(0, 0),
+                      ).chain(CurveTween(
+                        curve: Curves.decelerate,
+                      )),
+                    ),
+                    child: child,
+                  );
+                }),
+          );
         },
         splashRadius: 0.001,
       ),
       leadingWidth: 100.w,
-      toolbarHeight: 80.h,
-      collapsedHeight: 80.h,
+      toolbarHeight: 65.h,
       actions: [
         GestureDetector(
           child: SizedBox(
@@ -122,46 +169,69 @@ class _HomePageState extends State<HomePage> {
             width: 80.w,
             child: Badge(
               showBadge: totalOrders != 0 ? true : false,
-              padding: EdgeInsets.all(8),
-              badgeContent: Text(totalOrders.toString(), style: textStyle()),
+              padding: EdgeInsets.all(8.r),
+              badgeContent: Text(totalOrders.toString(),
+                  style: lobster2TextStyle(color: Colors.white)),
               badgeColor: Theme.of(context).canvasColor,
-              position: BadgePosition.topStart(start: 8, top: 1),
-              child: Image.asset(
-                'assets/paper-bag.png',
-                scale: 1.1.sp,
+              position: BadgePosition.topStart(start: 8.w, top: -5.h),
+              child: SvgPicture.asset(
+                'assets/Cart.svg',
+                height: 45.h,
               ),
             ),
           ),
           onTap: () {
-            Get.to(() => CheckoutPage(
-                  user: user,
-                ));
+            Navigator.of(context).push(
+              PageRouteBuilder(
+                  pageBuilder: (context, animtaion, secondaryAnimation) {
+                    return CheckoutPage(user: user);
+                  },
+                  transitionDuration: Duration(milliseconds: 500),
+                  transitionsBuilder:
+                      (context, animtaion, secondaryAnimation, child) {
+                    return SlideTransition(
+                      position: animtaion.drive(
+                        Tween(
+                          begin: Offset(1, 0),
+                          end: Offset(0, 0),
+                        ).chain(CurveTween(
+                          curve: Curves.decelerate,
+                        )),
+                      ),
+                      child: child,
+                    );
+                  }),
+            );
           },
         ),
       ],
     );
   }
+}
 
-  Padding _profile(BuildContext context) {
+class _Profile extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
     final _user = Provider.of<LocalUser>(context);
-    return Padding(
-      padding: EdgeInsets.only(left: 30.w),
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(
+          color: Colors.black26,
+          width: .5,
+        ),
+        borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.r), bottomLeft: Radius.circular(10.r)),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    offset: Offset(1.5, 3.5),
-                    blurRadius: 4,
-                    color: Colors.black38),
-              ],
-            ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(10.r),
               child: Image.network(_user.displayImage,
-                  fit: BoxFit.cover, height: 55.h, width: 55.h),
+                  fit: BoxFit.cover, height: 65.h, width: 65.h),
             ),
           ),
           Padding(
@@ -172,11 +242,11 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Text(
                   'Hey! ${_user.displayName.split(" ")[0]}',
-                  style: textStyle(),
+                  style: lobster2TextStyle(fontSize: 22),
                 ),
                 Text(
                   'What’s Special Today?',
-                  style: textStyle(fontSize: 18),
+                  style: lobster2TextStyle(fontSize: 16),
                 ),
               ],
             ),

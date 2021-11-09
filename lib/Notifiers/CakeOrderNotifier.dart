@@ -1,10 +1,14 @@
 import 'package:cake_mania/Models/CakeOrderModel.dart';
-import 'package:cake_mania/services/user_preferences.dart';
 import 'package:flutter/foundation.dart';
 
 class CakeOrderNotifier extends ChangeNotifier {
-  List<CakeOrderModel> _cakeOrderModel = UserPreference.getOrderDetails();
+  List<CakeOrderModel> _cakeOrderModel = <CakeOrderModel>[];
+  // List<CakeOrderModel> _cakeOrderModel = [];
   List<CakeOrderModel> get cakeOrderModel => _cakeOrderModel;
+  set setCakeOrderModel(List<CakeOrderModel> orders) {
+    _cakeOrderModel = orders;
+  }
+
   int get totalOrders => _cakeOrderModel.length;
 
   void add(CakeOrderModel event) {
@@ -13,7 +17,7 @@ class CakeOrderNotifier extends ChangeNotifier {
       _cakeOrderModel.forEach((element) {
         if (element.cakeId == event.cakeId && element.flavor == event.flavor) {
           _add = false;
-          element.quantity = event.quantity;
+          element.weight = event.weight;
           print('Already Added');
         }
       });
@@ -42,8 +46,8 @@ class CakeOrderNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  void changeQuantityAt(int index, int quantity) {
-    _cakeOrderModel.elementAt(index).quantity = quantity;
+  void changeWeightAt(int index, String weight) {
+    _cakeOrderModel.elementAt(index).weight = weight;
     notifyListeners();
   }
 

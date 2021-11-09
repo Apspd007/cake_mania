@@ -4,8 +4,9 @@ class CakeOrderModel {
   final String imageUrl;
   final double price;
   String flavor;
-  int quantity;
-  List<String>? addOns;
+  String weight;
+  // List<Ingredients>
+  List<dynamic>? addOns;
 
   CakeOrderModel({
     required this.cakeId,
@@ -13,7 +14,7 @@ class CakeOrderModel {
     required this.imageUrl,
     required this.price,
     required this.flavor,
-    required this.quantity,
+    required this.weight,
     this.addOns,
   });
   Map<String, dynamic> toJson(CakeOrderModel cakeOrderModel) => {
@@ -22,7 +23,7 @@ class CakeOrderModel {
         "imageUrl": cakeOrderModel.imageUrl,
         "price": cakeOrderModel.price,
         "flavor": cakeOrderModel.flavor,
-        "quantity": cakeOrderModel.quantity,
+        "weight": cakeOrderModel.weight,
         "addOns": cakeOrderModel.addOns
       };
 
@@ -30,9 +31,9 @@ class CakeOrderModel {
         imageUrl: json["imageUrl"],
         cakeId: json["cakeId"],
         name: json["name"],
-        price: json["price"],
+        price: json["price"].toDouble(),
         flavor: json["flavor"],
-        quantity: json["quantity"],
+        weight: json["weight"],
         addOns: json["addOns"] ?? [],
       );
 

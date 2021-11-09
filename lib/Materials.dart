@@ -4,29 +4,81 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 ThemeData themeData() {
   return ThemeData(
-      backgroundColor: Color(0xFFFB5B7B),
-      primaryColor: Color(0xFFFB5B7B),
-      appBarTheme: AppBarTheme(
-        color: Color(0xFFFB5B7B),
-      ),
-      cardColor: Color(0xFFF9ED4E),
-      scaffoldBackgroundColor: Color(0xFFFB5B7B),
-      accentColor: Color(0xFF73F8FC),
-      canvasColor: Color(0xFFE8715F));
+    backgroundColor: Color(0xFFFFFFFF),
+    primaryColor: Color(0xFFFFFFFF),
+    appBarTheme: AppBarTheme(
+      color: Color(0xFFFB5B7B),
+    ),
+    cardColor: Color(0xFFF9ED4E),
+    scaffoldBackgroundColor: Color(0xFFF9F9F9),
+    canvasColor: Color(0xFFE8715F),
+    colorScheme: ColorScheme.fromSwatch().copyWith(
+      // secondary: Color(0xFF73F8FC),
+      secondary: Color(0xFFF9ED4E),
+    ),
+  );
 }
 
-TextStyle textStyle({
+TextStyle lobster2TextStyle({
   double? fontSize,
+  double? letterSpacing,
   Color? color,
   TextDecoration? textDecoration,
-  bool enableShadow = true,
+  bool enableShadow = false,
+  FontWeight? fontWeight,
+}) {
+  return GoogleFonts.lobsterTwo(
+    fontSize: fontSize == null ? 22.sp : fontSize.sp,
+    color: color ?? Colors.black87,
+    decoration: textDecoration,
+    fontWeight: fontWeight,
+    letterSpacing: letterSpacing ?? 1.0,
+    shadows: enableShadow
+        ? [
+            Shadow(
+                offset: Offset(0, 4.5), blurRadius: 4, color: Colors.black38),
+          ]
+        : null,
+  );
+}
+
+TextStyle poppinsTextStyle({
+  double? fontSize,
+  double? letterSpacing,
+  Color? color,
+  TextDecoration? textDecoration,
+  bool enableShadow = false,
   FontWeight? fontWeight,
 }) {
   return GoogleFonts.poppins(
     fontSize: fontSize == null ? 22.sp : fontSize.sp,
-    color: color ?? Colors.white,
+    color: color ?? Colors.black87,
     decoration: textDecoration,
     fontWeight: fontWeight,
+    letterSpacing: letterSpacing ?? .5,
+    shadows: enableShadow
+        ? [
+            Shadow(
+                offset: Offset(0, 4.5), blurRadius: 4, color: Colors.black38),
+          ]
+        : null,
+  );
+}
+
+TextStyle pacificoTextStyle({
+  double? fontSize,
+  double? letterSpacing,
+  Color? color,
+  TextDecoration? textDecoration,
+  bool enableShadow = false,
+  FontWeight? fontWeight,
+}) {
+  return GoogleFonts.pacifico(
+    fontSize: fontSize == null ? 22.sp : fontSize.sp,
+    color: color ?? Colors.black87,
+    decoration: textDecoration,
+    fontWeight: fontWeight,
+    letterSpacing: letterSpacing,
     shadows: enableShadow
         ? [
             Shadow(

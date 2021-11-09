@@ -1,9 +1,8 @@
 import 'package:cake_mania/Models/CakeOrderModel.dart';
 import 'package:cake_mania/Models/OrderStatusEnums.dart';
 import 'package:cake_mania/Models/PaymentStatusEnums.dart';
-import 'package:cake_mania/services/AuthenticationService.dart';
 
-class OrderBillModel {
+class OrderBillModel  {
   final List<CakeOrderModel> cakeOrderModel;
   final OrderStatus orderStatus;
   final PaymentStatus paymentStatus;
@@ -30,6 +29,7 @@ class OrderBillModel {
         cakeOrderModel: CakeOrderModel.jsonToOrderList(json, "cakeOrderModel"),
         totalPrice: json["totalPrice"],
         orderId: json["orderId"],
+        paymentStatus: PaymentStatusConvertor.fromJson(json["paymentStatus"]),
         orderStatus: OrderStatusConvertor.fromJson(json["orderStatus"]),
       );
   static Map<String, dynamic> toJson(OrderBillModel orderBillModel) => {
@@ -38,6 +38,8 @@ class OrderBillModel {
             orderBillModel.cakeOrderModel, "cakeOrderModel")["cakeOrderModel"],
         "orderId": orderBillModel.orderId,
         "totalPrice": orderBillModel.totalPrice,
+        "paymentStatus":
+            PaymentStatusConvertor.toJson(orderBillModel.paymentStatus),
         "orderStatus": OrderStatusConvertor.toJson(orderBillModel.orderStatus),
       };
 }

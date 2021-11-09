@@ -44,14 +44,6 @@ class Auth implements AuthBase {
   final Database _database = MyFirestoreDatabse();
   GoogleSignIn _googleSignIn = GoogleSignIn();
 
-  Map<String, dynamic> jsonData() => {
-        "UserData": {
-          "favourites": [],
-          "previousOrders": [],
-          "confirmOrders": [],
-        }
-      };
-
   LocalUser? _userFromFirebase(User? _user) {
     if (_user != null) {
       return LocalUser(
@@ -90,7 +82,7 @@ class Auth implements AuthBase {
         ),
       );
       if (authResult.additionalUserInfo!.isNewUser) {
-        _database.createUser(_userFromFirebase(authResult.user)!, jsonData());
+        _database.createNewUser(_userFromFirebase(authResult.user)!);
       }
       return _userFromFirebase(authResult.user);
     } else {

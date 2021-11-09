@@ -6,10 +6,10 @@ import 'package:provider/provider.dart';
 
 class CakeOrderCard extends StatefulWidget {
   final int index;
-  final CakeOrderModel cakeOrderCard;
+  final CakeOrderModel cakeOrderModel;
   CakeOrderCard({
     required this.index,
-    required this.cakeOrderCard,
+    required this.cakeOrderModel,
   });
 
   @override
@@ -29,16 +29,26 @@ class _CakeOrderCardState extends State<CakeOrderCard> {
       value: 'Strawberry',
     ),
   ];
-  List<DropdownMenuItem<int>> _quantityList = [
+  List<DropdownMenuItem<String>> _weightList = [
     DropdownMenuItem(
-      child: Text('1'),
+      child: Text('1 KG'),
       onTap: () {},
-      value: 1,
+      value: '1 KG',
     ),
     DropdownMenuItem(
-      child: Text('2'),
+      child: Text('2 KG'),
       onTap: () {},
-      value: 2,
+      value: '2 KG',
+    ),
+    DropdownMenuItem(
+      child: Text('5 KG'),
+      onTap: () {},
+      value: '5 KG',
+    ),
+    DropdownMenuItem(
+      child: Text('10 KG'),
+      onTap: () {},
+      value: '10 KG',
     ),
   ];
 
@@ -47,101 +57,108 @@ class _CakeOrderCardState extends State<CakeOrderCard> {
     final _cakeOrderNotifier = context.read<CakeOrderNotifier>();
     return Container(
       decoration: BoxDecoration(
-          color: Color(0xFFF6CBD2), borderRadius: BorderRadius.circular(20)),
+          color: Colors.yellow.shade200,
+          // color: MyColorScheme.corn,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              offset: Offset.zero,
+              color: Colors.black26,
+              blurRadius: 2.5,
+            ),
+          ]),
       margin: EdgeInsets.all(10),
       padding: EdgeInsets.fromLTRB(5, 15, 10, 15),
       width: double.infinity,
       child: Row(children: [
         Expanded(
           flex: 2,
-          child: Image.asset(
-            'assets/cake.png',
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            child: Image.network(
+              widget.cakeOrderModel.imageUrl,
+            ),
           ),
         ),
         Expanded(
           flex: 4,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Whit Frozen Cake',
-                  style: textStyle(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(widget.cakeOrderModel.name,
+                    style: lobster2TextStyle(
                       color: Color(0xFF3D3D3D),
                       fontWeight: FontWeight.w500,
-                      enableShadow: false)),
-              Text('\u{20B9}2000',
-                  style: textStyle(
+                    )),
+                Text('\u{20B9}${widget.cakeOrderModel.price}',
+                    style: lobster2TextStyle(
                       color: Color(0xFF3D3D3D),
                       fontWeight: FontWeight.w500,
-                      enableShadow: false)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  DropdownButton<String>(
-                    value: widget.cakeOrderCard.flavor,
-                    hint: Text('Flavor',
-                        style: textStyle(
-                            color: Color(0xFF3D3D3D),
-                            fontSize: 15,
-                            enableShadow: false)),
-                    style: textStyle(
+                    )),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DropdownButton<String>(
+                      value: widget.cakeOrderModel.flavor,
+                      hint: Text('Flavor',
+                          style: lobster2TextStyle(
+                              color: Color(0xFF3D3D3D), fontSize: 15)),
+                      style: lobster2TextStyle(
                         fontSize: 16,
-                        color: Colors.black87,
-                        enableShadow: false),
-                    dropdownColor: Colors.white,
-                    iconEnabledColor: Color(0xFF3D3D3D),
-                    underline: DecoratedBox(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.black87,
-                            width: 0.5,
+                      ),
+                      dropdownColor: Colors.white,
+                      iconEnabledColor: Color(0xFF3D3D3D),
+                      underline: DecoratedBox(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.black87,
+                              width: 0.5,
+                            ),
                           ),
                         ),
                       ),
+                      items: _flavorList,
+                      onChanged: (String? flavor) {
+                        setState(() {
+                          _cakeOrderNotifier.changeFlavorAt(
+                              widget.index, flavor!);
+                        });
+                      },
                     ),
-                    items: _flavorList,
-                    onChanged: (String? flavor) {
-                      setState(() {
-                        _cakeOrderNotifier.changeFlavorAt(
-                            widget.index, flavor!);
-                      });
-                    },
-                  ),
-                  DropdownButton<int>(
-                    value: widget.cakeOrderCard.quantity,
-                    hint: Text('Quantity',
-                        style: textStyle(
-                            color: Color(0xFF3D3D3D),
-                            fontSize: 15,
-                            enableShadow: false)),
-                    style: textStyle(
-                        fontSize: 16,
-                        color: Colors.black87,
-                        enableShadow: false),
-                    dropdownColor: Colors.white,
-                    iconEnabledColor: Color(0xFF3D3D3D),
-                    underline: DecoratedBox(
-                      decoration: const BoxDecoration(
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Colors.black87,
-                            width: 0.5,
+                    DropdownButton<String>(
+                      value: widget.cakeOrderModel.weight,
+                      hint: Text('Weight',
+                          style: lobster2TextStyle(
+                              color: Color(0xFF3D3D3D), fontSize: 15)),
+                      style: lobster2TextStyle(fontSize: 16),
+                      dropdownColor: Colors.white,
+                      iconEnabledColor: Color(0xFF3D3D3D),
+                      underline: DecoratedBox(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Colors.black87,
+                              width: 0.5,
+                            ),
                           ),
                         ),
                       ),
+                      items: _weightList,
+                      onChanged: (String? weight) {
+                        setState(() {
+                          _cakeOrderNotifier.changeWeightAt(
+                              widget.index, weight!);
+                        });
+                      },
                     ),
-                    items: _quantityList,
-                    onChanged: (int? quantity) {
-                      setState(() {
-                        _cakeOrderNotifier.changeQuantityAt(
-                            widget.index, quantity!);
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ]),

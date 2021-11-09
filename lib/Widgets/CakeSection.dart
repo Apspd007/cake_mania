@@ -17,15 +17,27 @@ class CakeSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cards = CakeModel.cakeModelListToCakeCardList(cardModels,sectionCardColors);
+    final cards =
+        CakeModel.cakeModelListToCakeCardList(cardModels, sectionCardColors);
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 20),
+      padding: EdgeInsets.only(top: 20.h),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: textStyle(fontSize: 30),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black26,
+                width: .5,
+              ),
+              borderRadius: BorderRadius.circular(10.r),
+            ),
+            child: Text(
+              title,
+              style: lobster2TextStyle(fontSize:25, letterSpacing: 2),
+            ),
           ),
           SizedBox(height: 20.h),
           SingleChildScrollView(

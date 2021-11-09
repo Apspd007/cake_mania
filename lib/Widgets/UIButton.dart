@@ -1,3 +1,4 @@
+import 'package:cake_mania/Materials.dart';
 import 'package:cake_mania/Widgets/CustomButton.dart';
 import 'package:flutter/material.dart';
 
@@ -38,9 +39,9 @@ class UILoginButton extends StatelessWidget {
           googleImage,
           Text(
             text,
-            style: TextStyle(
-              color: Colors.black54,
+            style: lobster2TextStyle(
               fontSize: textSize,
+              color: Color(0xFFFF7285),
             ),
           ),
         ],

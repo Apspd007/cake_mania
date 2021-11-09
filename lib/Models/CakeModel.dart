@@ -23,7 +23,7 @@ class CakeModel {
         cakeId: json["cakeId"],
         name: json["name"].toString(),
         imageUrl: json["imageUrl"].toString(),
-        price: json["price"] as double,
+        price: double.parse(json["price"].toString()) ,
         details: json["details"],
         ingredient: json["ingredient"],
       );
