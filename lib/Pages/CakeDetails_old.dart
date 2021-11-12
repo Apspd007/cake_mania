@@ -94,6 +94,7 @@ class _CakeDetailsState extends State<CakeDetails>
         name: cakeModel.name,
         price: cakeModel.price,
         weight: _weight!,
+        occasion: '',
       ));
       Fluttertoast.showToast(
         msg: 'Added to the Cart',

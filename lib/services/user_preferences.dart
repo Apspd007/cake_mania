@@ -22,20 +22,22 @@ class UserPreference {
     final data = Provider.of<CakeOrderNotifier>(context, listen: false);
     final json = jsonEncode(CakeOrderModel.orderListToJson(
         data.cakeOrderModel, _keyCakeOrderDetails));
-    _preference.write(_keyCakeOrderDetails, json);
+    await _preference.write(_keyCakeOrderDetails, json);
   }
 
-  static saveUserSettings(UserSettingsModel userSettings) async {
-    final json = jsonEncode(UserSettingsModel.toJson(userSettings));
-    _preference.write(_keyUserSettings, json);
+  static saveUserSettings(OrderRelatedSettings userSettings) async {
+    final json = jsonEncode(OrderRelatedSettings.toJson(userSettings));
+    // print(json);
+    await _userSettings.write(_keyUserSettings, json);
   }
 
-  static UserSettingsModel getUserSettings() {
+  static OrderRelatedSettings getUserSettings() {
     final data = _userSettings.read(_keyUserSettings);
-    UserSettingsModel userSettings = UserSettingsModel();
+    OrderRelatedSettings userSettings =
+        OrderRelatedSettings(notifyPaidOrder: false, orderId: '');
     if (data != null) {
       final Map<String, dynamic> json = jsonDecode(data);
-      userSettings = UserSettingsModel.fromJson(json);
+      userSettings = OrderRelatedSettings.fromJson(json);
     }
     return userSettings;
   }
@@ -51,5 +53,8 @@ class UserPreference {
 
   static clearOrderData() {
     _preference.erase();
+  }
+  static clearUserData() {
+    _userSettings.erase();
   }
 }

@@ -2,6 +2,7 @@ import 'package:cake_mania/Materials.dart';
 import 'package:cake_mania/Models/OrderBillModel.dart';
 import 'package:cake_mania/Widgets/OrderBillCard.dart';
 import 'package:cake_mania/Widgets/UIAppBar.dart';
+import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:cake_mania/services/FirestoreDatabase.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,8 @@ import 'package:nil/nil.dart';
 import 'package:provider/provider.dart';
 
 class TrackingOrders extends StatefulWidget {
-  final String uid;
-  TrackingOrders({required this.uid});
+  final LocalUser user;
+  TrackingOrders({required this.user});
   @override
   _TrackingOrdersState createState() => _TrackingOrdersState();
 }
@@ -54,24 +55,26 @@ class _TrackingOrdersState extends State<TrackingOrders> {
               ],
             ),
             body: _showActiveOrders
-                ? ActiveOrders(uid: widget.uid)
-                : CompletedOrders(uid: widget.uid),
+                ? ActiveOrders(user: widget.user)
+                : CompletedOrders(user: widget.user),
           ),
         ],
       ),
     );
   }
-
 }
 
 class ActiveOrders extends StatelessWidget {
-  final String uid;
-  ActiveOrders({required this.uid});
+  final LocalUser user;
+  ActiveOrders({required this.user});
 
   List<Widget> _children(List<OrderBillModel> orders) {
     final List<Widget> list = [];
     orders.forEach((element) {
-      list.add(OrderBillCard(orderBillCard: element));
+      list.add(OrderBillCard(
+        user: user,
+        orderBillModel: element,
+      ));
     });
     return list;
   }
@@ -82,7 +85,7 @@ class ActiveOrders extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: StreamBuilder<DocumentSnapshot<Object?>>(
-          stream: db.getMyConfirmedOrders(uid),
+          stream: db.getMyConfirmedOrders(user.uid),
           builder: (BuildContext context,
               AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
             if (snapshot.hasData) {
@@ -135,14 +138,19 @@ class ActiveOrders extends StatelessWidget {
 }
 
 class CompletedOrders extends StatelessWidget {
-  final String uid;
-  CompletedOrders({required this.uid});
+  final LocalUser user;
+  CompletedOrders({
+    required this.user,
+  });
 
   List<Widget> _children(List<OrderBillModel> orders) {
     final List<Widget> list = [];
 
     orders.forEach((element) {
-      list.add(OrderBillCard(orderBillCard: element));
+      list.add(OrderBillCard(
+        user: user,
+        orderBillModel: element,
+      ));
     });
     return list;
   }
@@ -153,7 +161,7 @@ class CompletedOrders extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: StreamBuilder<DocumentSnapshot<Object?>>(
-          stream: db.getMyCompletedOrders(uid),
+          stream: db.getMyCompletedOrders(user.uid),
           builder: (BuildContext context,
               AsyncSnapshot<DocumentSnapshot<Object?>> snapshot) {
             if (snapshot.hasData) {

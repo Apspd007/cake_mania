@@ -1,6 +1,7 @@
 import 'package:cake_mania/Materials.dart';
 import 'package:cake_mania/Models/DeliveryDetailsModel.dart';
 import 'package:cake_mania/Models/OrderBillModel.dart';
+import 'package:cake_mania/Models/UserSettingsModel.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
 import 'package:cake_mania/Notifiers/DeliveryModelNotifier.dart';
 import 'package:cake_mania/Pages/CongratsPage.dart';
@@ -27,6 +28,9 @@ class CheckoutPage extends StatefulWidget {
 
 class _CheckoutPageState extends State<CheckoutPage> {
   double totalPrice = 0;
+  final today =
+      '${DateTime.now().year.toString()}-${DateTime.now().month.toString()}-${DateTime.now().day.toString()}';
+
   final String orderId = 'order_${randomNumeric(12)}';
   late Database database;
 
@@ -55,6 +59,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
       totalPrice: totalPrice,
       orderId: orderId,
       cakeOrderModel: cakeOrderNotifier.cakeOrderModel,
+      orderDate: '$today ${TimeOfDay.now().format(context).toString()}',
     ));
     database.confirmOrder(
         orderId: orderId,
@@ -64,9 +69,12 @@ class _CheckoutPageState extends State<CheckoutPage> {
             DeliveryDetailsModel.toJson(deliveryNotifier.deliveryModel!));
     cakeOrderNotifier.deleteAllOrders();
     UserPreference.clearOrderData();
+    UserPreference.saveUserSettings(
+        OrderRelatedSettings(notifyPaidOrder: true, orderId: orderId));
     setState(() {});
     Future.delayed(Duration(milliseconds: 250)).then((value) {
       // Navigator.of(context).popUntil((route) => route.isFirst);
+
       Navigator.of(context).push(
         PageRouteBuilder(
             pageBuilder: (context, animtaion, secondaryAnimation) {
@@ -232,7 +240,7 @@ class _CheckoutPageState extends State<CheckoutPage> {
   Widget _grandTotal() {
     return Container(
       decoration: BoxDecoration(
-          color:Colors.yellow.shade400,
+          color: Colors.yellow.shade400,
           borderRadius: BorderRadius.all(
             Radius.circular(20.r),
           ),

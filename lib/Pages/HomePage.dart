@@ -1,6 +1,7 @@
 import 'package:badges/badges.dart';
 import 'package:cake_mania/Materials.dart';
 import 'package:cake_mania/Models/SectionModel.dart';
+import 'package:cake_mania/Models/UserSettingsModel.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
 import 'package:cake_mania/Notifiers/SectionNotifier.dart';
 import 'package:cake_mania/Other/ConfirmExitDialog.dart';
@@ -27,12 +28,29 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     // final userSettings = UserPreference.getUserSettings();
+    if (mounted) {
+      WidgetsBinding.instance!.addPostFrameCallback((_) {
+        Future.delayed(Duration(seconds: 1), () => checkIfOrderPaid(context));
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    
+  }
+
+  checkIfOrderPaid(BuildContext context) {
+    final db = Provider.of<Database>(context, listen: false);
+    final user = Provider.of<LocalUser>(context, listen: false);
+    // print(user.uid);
+    db.getPaymentStaus(user.uid, context);
+    // print(UserPreference.getUserSettings().notifyPaidOrder);
   }
 
   @override

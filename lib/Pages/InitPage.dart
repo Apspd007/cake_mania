@@ -2,7 +2,6 @@
 /// initialize all nessassary data
 ///
 ///
-import 'package:cake_mania/Pages/CongratsPage.dart';
 import 'package:cake_mania/Pages/HomePage.dart';
 import 'package:cake_mania/services/FirestoreDatabase.dart';
 import 'package:flutter/material.dart';

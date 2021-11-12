@@ -1,5 +1,4 @@
 import 'package:cake_mania/Models/CakeDetailsNotifier.dart';
-import 'package:cake_mania/Models/UserSettingsModel.dart';
 import 'package:cake_mania/MyApp.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
 import 'package:cake_mania/Notifiers/DeliveryModelNotifier.dart';
@@ -16,7 +15,6 @@ void main() async {
   await Firebase.initializeApp();
   await UserPreference.init();
   // await NotificationService.init();
-  UserSettingsModel.init();
 
   runApp(RootApp());
 }

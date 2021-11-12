@@ -1,8 +1,10 @@
 import 'package:cake_mania/Materials.dart';
 import 'package:cake_mania/Models/CakeCardColor.dart';
 import 'package:cake_mania/Models/CakeModel.dart';
+import 'package:cake_mania/Widgets/CakeCard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 
 class CakeSection extends StatelessWidget {
   final String title;
@@ -25,7 +27,7 @@ class CakeSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 10.w,vertical: 5.h),
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
@@ -36,7 +38,7 @@ class CakeSection extends StatelessWidget {
             ),
             child: Text(
               title,
-              style: lobster2TextStyle(fontSize:25, letterSpacing: 2),
+              style: lobster2TextStyle(fontSize: 25, letterSpacing: 2),
             ),
           ),
           SizedBox(height: 20.h),

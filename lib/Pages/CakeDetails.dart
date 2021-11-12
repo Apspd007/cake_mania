@@ -4,6 +4,7 @@ import 'package:cake_mania/Models/CakeCardColor.dart';
 import 'package:cake_mania/Models/CakeDetailsNotifier.dart';
 import 'package:cake_mania/Models/CakeModel.dart';
 import 'package:cake_mania/Models/CakeOrderModel.dart';
+import 'package:cake_mania/Models/UserSettingsModel.dart';
 import 'package:cake_mania/Notifiers/CakeOrderNotifier.dart';
 import 'package:cake_mania/Pages/CheckoutPage.dart';
 import 'package:cake_mania/Widgets/Ingredients.dart';
@@ -14,8 +15,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:material_dialogs/material_dialogs.dart';
-import 'package:material_dialogs/widgets/buttons/icon_button.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -62,6 +61,12 @@ class _CakeDetailsState extends State<CakeDetails>
         backgroundColor: Colors.red[300],
         gravity: ToastGravity.CENTER,
       );
+    } else if (detailsNotifier.occasion == null) {
+      Fluttertoast.showToast(
+        msg: 'Select a Date',
+        backgroundColor: Colors.red[300],
+        gravity: ToastGravity.CENTER,
+      );
     } else {
       _cakeOrderNotifier.add(CakeOrderModel(
         imageUrl: cakeModel.imageUrl,
@@ -70,6 +75,9 @@ class _CakeDetailsState extends State<CakeDetails>
         name: cakeModel.name,
         price: cakeModel.price,
         weight: detailsNotifier.weight!,
+        occasion: detailsNotifier.occasion!,
+        message: detailsNotifier.message ?? null,
+        theme: detailsNotifier.theme ?? null,
       ));
       Fluttertoast.showToast(
         msg: 'Added to the Cart',
@@ -105,16 +113,12 @@ class _CakeDetailsState extends State<CakeDetails>
             )
           : OrderFloatingButton(
               onPressed: () {
+                // UserPreference.saveUserSettings(
+                //     OrderRelatedSettings(notifyPaidOrder: true, orderId: 'order_813725959656'));
                 Future.delayed(Duration(milliseconds: 200), () {
                   setState(() {
                     _ordering = true;
                   });
-                  // db.getPaymentStaus(widget.user.uid);
-                  // NotificationService.displayNotification(
-                  //   title: 'Testing',
-                  //   body: 'Notification Testing',
-                  //   payload: 'testing'
-                  // );
                 });
               },
             ),
@@ -270,24 +274,6 @@ class OrderFloatingButton extends StatelessWidget {
           ),
         ),
         onPressed: onPressed,
-        // onPressed: () {
-        //   Dialogs.materialDialog(
-        //       color: Colors.white,
-        //       msg: 'Congratulations, you won 500 points',
-        //       title: 'Congratulations',
-        //       // animation: 'assets/cong_example.json',
-        //       context: context,
-        //       actions: [
-        //         IconsButton(
-        //           onPressed: () {},
-        //           text: 'Claim',
-        //           iconData: Icons.done,
-        //           color: Colors.blue,
-        //           textStyle: TextStyle(color: Colors.white),
-        //           iconColor: Colors.white,
-        //         ),
-        //       ]);
-        // },
       ),
     );
   }
@@ -457,12 +443,6 @@ class _MyAppBar extends StatelessWidget {
 class _MakingOrder extends StatelessWidget {
   final CakeModel cakeModel;
   bool move = false;
-  String? theme;
-  String? message;
-  // TextEditingController messageController = TextEditingController();
-  // TextEditingController themeController = TextEditingController();
-  // final FocusNode _focusNode = FocusNode();
-  // final FocusNode _focusNode1 = FocusNode();
   _MakingOrder({required this.cakeModel});
 
   String _formatDate(DateTime date) {

@@ -1,40 +1,44 @@
 import 'package:cake_mania/services/user_preferences.dart';
 import 'package:flutter/cupertino.dart';
 
-class UserSettingsModel extends ChangeNotifier {
+class OrderRelatedSettings extends ChangeNotifier {
   bool notifyPaidOrder;
-  UserSettingsModel({
-    this.notifyPaidOrder = false,
+  String orderId;
+  OrderRelatedSettings({
+    required this.notifyPaidOrder,
+    required this.orderId,
   });
-  static void init() {
-    UserPreference.saveUserSettings(UserSettingsModel(
-      notifyPaidOrder: false,
-    ));
-  }
+  // static void init() {
+  //   UserPreference.saveUserSettings(UserSettingsModel(
+  //     notifyPaidOrder: false,
+  //   ));
+  // }
 
   void changeUserSettings({
     bool? notifyPaidOrder,
   }) {
     this.notifyPaidOrder = notifyPaidOrder ?? this.notifyPaidOrder;
     notifyListeners();
-    UserPreference.saveUserSettings(UserSettingsModel(
-      notifyPaidOrder: this.notifyPaidOrder,
-    ));
+    UserPreference.saveUserSettings(OrderRelatedSettings(
+        notifyPaidOrder: this.notifyPaidOrder, orderId: ''));
   }
 
   void defaultUserSettings() {
     this.notifyPaidOrder = false;
     notifyListeners();
-    UserPreference.saveUserSettings(UserSettingsModel(
+    UserPreference.saveUserSettings(OrderRelatedSettings(
       notifyPaidOrder: false,
+      orderId: '',
     ));
   }
 
-  factory UserSettingsModel.fromJson(json) => UserSettingsModel(
+  factory OrderRelatedSettings.fromJson(json) => OrderRelatedSettings(
         notifyPaidOrder: json['notifyPaidOrder'],
+        orderId: json['orderId'] ?? '',
       );
 
-  static Map<String, dynamic> toJson(UserSettingsModel userSettings) => {
+  static Map<String, dynamic> toJson(OrderRelatedSettings userSettings) => {
         'notifyPaidOrder': userSettings.notifyPaidOrder,
+        'orderId': userSettings.orderId,
       };
 }

@@ -2,17 +2,19 @@ import 'package:cake_mania/Models/CakeOrderModel.dart';
 import 'package:cake_mania/Models/OrderStatusEnums.dart';
 import 'package:cake_mania/Models/PaymentStatusEnums.dart';
 
-class OrderBillModel  {
+class OrderBillModel {
   final List<CakeOrderModel> cakeOrderModel;
   final OrderStatus orderStatus;
   final PaymentStatus paymentStatus;
   final double totalPrice;
   final String orderId;
+  final String orderDate;
 
   OrderBillModel({
     required this.cakeOrderModel,
     required this.totalPrice,
     required this.orderId,
+    required this.orderDate,
     this.orderStatus = OrderStatus.pending,
     this.paymentStatus = PaymentStatus.unpaid,
   });
@@ -29,6 +31,7 @@ class OrderBillModel  {
         cakeOrderModel: CakeOrderModel.jsonToOrderList(json, "cakeOrderModel"),
         totalPrice: json["totalPrice"],
         orderId: json["orderId"],
+        orderDate: json["orderDate"],
         paymentStatus: PaymentStatusConvertor.fromJson(json["paymentStatus"]),
         orderStatus: OrderStatusConvertor.fromJson(json["orderStatus"]),
       );
@@ -37,6 +40,7 @@ class OrderBillModel  {
         "cakeOrderModel": CakeOrderModel.orderListToJson(
             orderBillModel.cakeOrderModel, "cakeOrderModel")["cakeOrderModel"],
         "orderId": orderBillModel.orderId,
+        "orderDate": orderBillModel.orderDate,
         "totalPrice": orderBillModel.totalPrice,
         "paymentStatus":
             PaymentStatusConvertor.toJson(orderBillModel.paymentStatus),

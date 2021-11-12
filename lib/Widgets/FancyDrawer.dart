@@ -103,7 +103,7 @@ class _FancyDrawerState extends State<FancyDrawer>
                         PageRouteBuilder(
                             pageBuilder:
                                 (context, animtaion, secondaryAnimation) {
-                              return TrackingOrders(uid: user.uid);
+                              return TrackingOrders(user: user);
                             },
                             transitionDuration: Duration(milliseconds: 500),
                             transitionsBuilder: (context, animtaion,

@@ -1,20 +1,24 @@
 import 'package:cake_mania/Materials.dart';
+import 'package:cake_mania/Pages/OrderDetailPage.dart';
+import 'package:cake_mania/services/AuthenticationService.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cake_mania/Models/OrderBillModel.dart';
 import 'package:flutter/cupertino.dart';
 
 class OrderBillCard extends StatelessWidget {
-  final OrderBillModel orderBillCard;
+  final LocalUser user;
+  final OrderBillModel orderBillModel;
   OrderBillCard({
-    required this.orderBillCard,
+    required this.user,
+    required this.orderBillModel,
   });
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-          color: Colors.yellow.shade200,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -29,14 +33,14 @@ class OrderBillCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
-            children: _children(orderBillCard),
+            children: _children(context, orderBillModel),
           ),
         ],
       ),
     );
   }
 
-  List<Widget> _children(OrderBillModel orderBillCard) {
+  List<Widget> _children(BuildContext context, OrderBillModel orderBillCard) {
     final orderStatus = orderBillCard.orderStatus.toString().split(".")[1];
     final paymentStatus =
         orderBillCard.paymentStatus.toString().split('.')[1].toUpperCase();
@@ -67,14 +71,6 @@ class OrderBillCard extends StatelessWidget {
                             color: Colors.black87,
                           ),
                         ),
-                        // TextSpan(
-                        //   text: "(${element.flavor})",
-                        //   style: textStyle(
-                        //     enableShadow: false,
-                        //     fontSize: 19,
-                        //     color: Colors.black87,
-                        //   ),
-                        // ),
                       ],
                     )),
                 Row(
@@ -158,12 +154,35 @@ class OrderBillCard extends StatelessWidget {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  orderStatus,
+                  orderStatus.toUpperCase(),
                   style: poppinsTextStyle(
-                      fontSize: 20, color: _orderColor(orderStatus)),
+                    fontSize: 20,
+                    color: _orderColor(orderStatus),
+                  ),
                 ),
               ],
             ),
+            SizedBox(height: 5.h),
+            Center(
+              child: SizedBox(
+                width: double.infinity,
+                child: TextButton(
+                  onPressed: () {
+                    Future.delayed(Duration(milliseconds: 250), () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => OrderDetailPage(
+                                user: user,
+                                orderModel: orderBillModel,
+                              )));
+                    });
+                  },
+                  child: Text(
+                    'See Details',
+                    style: poppinsTextStyle(color: Colors.black87),
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

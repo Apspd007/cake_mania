@@ -67,7 +67,7 @@ class _FancyDrawerState extends State<FancyDrawer>
               onTab: () {
                 Navigator.of(context).pop();
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (_) => TrackingOrders(uid: user.uid)));
+                    builder: (_) => TrackingOrders(user: user)));
               }),
           SizedBox(height: 20),
           _animation(
